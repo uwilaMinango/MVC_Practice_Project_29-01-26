@@ -4,7 +4,6 @@ import com.runner.web.dto.ClubDto;
 import com.runner.web.models.Club;
 import com.runner.web.repo.ClubRepo;
 import com.runner.web.service.ClubService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
