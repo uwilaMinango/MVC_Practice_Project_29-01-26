@@ -3,9 +3,11 @@ package com.runner.web.controller;
 import com.runner.web.dto.ClubDto;
 import com.runner.web.models.Club;
 import com.runner.web.service.ClubService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,8 +36,13 @@ public class ClubController {
     }
 
     @PostMapping("/club/new")
-    public String saveClub(@ModelAttribute("club") Club club){
-        clubService.saveClub(club);
+    public String saveClub(@Valid @ModelAttribute("club") ClubDto clubDto, BindingResult result, Model model){
+        //the validation is being applied but the messages are not showing on the page, work on that.
+        if(result.hasErrors()){
+            model.addAttribute("club", clubDto);
+            return "clubs-create";
+        }
+        clubService.saveClub(clubDto);
         return"redirect:/club";
     }
 
@@ -47,7 +54,12 @@ public class ClubController {
     }
 
     @PostMapping("/club/{clubId}/edit")
-    public String updateClub(@PathVariable int clubId, @ModelAttribute("club") ClubDto club){
+    public String updateClub(@PathVariable int clubId,
+                             @Valid @ModelAttribute("club") ClubDto club,
+                             BindingResult result){
+        if(result.hasErrors()){
+            return "club-edit";
+        }
         club.setId(clubId);
         clubService.updateClub(club);
         return "redirect:/club";
