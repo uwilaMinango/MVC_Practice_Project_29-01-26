@@ -11,5 +11,8 @@ public interface ClubService {
     Club saveClub(ClubDto clubDto);
 
     ClubDto findClubById(Long clubId);
+
     void updateClub(ClubDto clubDto);
+
+    List<ClubDto> searchClubs(String query);
 }

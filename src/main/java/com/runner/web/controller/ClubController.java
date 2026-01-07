@@ -35,6 +35,13 @@ public class ClubController {
         return "clubs-create";
     }
 
+    @GetMapping("/club/search")
+    public String searchClubs(@RequestParam("query") String query, Model model){
+        List<ClubDto> clubs = clubService.searchClubs(query);
+        model.addAttribute("clubs", clubs);
+        return "club-list";
+    }
+
     @PostMapping("/club/new")
     public String saveClub(@Valid @ModelAttribute("club") ClubDto clubDto, BindingResult result, Model model){
         //the validation is being applied but the messages are not showing on the page, work on that.
