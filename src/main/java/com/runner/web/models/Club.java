@@ -1,8 +1,6 @@
 package com.runner.web.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +18,8 @@ import java.time.LocalDateTime;
 @Entity
 public class Club {
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String title;
     private String photoUrl;
     private String content;

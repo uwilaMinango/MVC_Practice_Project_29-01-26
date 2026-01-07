@@ -30,7 +30,7 @@ public class ClubController {
 
     @GetMapping("/club/new")
     public String createClubForm(Model model){
-        Club club = new Club();
+        ClubDto club = new ClubDto();
         model.addAttribute("club", club);
         return "clubs-create";
     }
@@ -46,6 +46,13 @@ public class ClubController {
         return"redirect:/club";
     }
 
+    @GetMapping("/club/{clubId}")
+    public String clubDetail(@PathVariable("clubId") Long clubId, Model model){
+        ClubDto clubDto = clubService.findClubById(clubId);
+        model.addAttribute("club", clubDto);
+        return "club-detail";
+    }
+
     @GetMapping("/club/{clubId}/edit")
     public String editClubForm(@PathVariable Long clubId, Model model){
         ClubDto club = clubService.findClubById(clubId);
@@ -54,7 +61,7 @@ public class ClubController {
     }
 
     @PostMapping("/club/{clubId}/edit")
-    public String updateClub(@PathVariable int clubId,
+    public String updateClub(@PathVariable Long clubId,
                              @Valid @ModelAttribute("club") ClubDto club,
                              BindingResult result){
         if(result.hasErrors()){

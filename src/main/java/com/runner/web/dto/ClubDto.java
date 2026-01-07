@@ -1,15 +1,19 @@
 package com.runner.web.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
+
 public class ClubDto{
-    private int id;
+    private Long id;
     @NotEmpty(message = "Title field should not be empty")
     private String title;
     @NotEmpty(message = "Photo link field should not be empty")
