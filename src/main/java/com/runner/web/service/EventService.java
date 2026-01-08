@@ -2,6 +2,10 @@ package com.runner.web.service;
 
 import com.runner.web.dto.EventDto;
 
+import java.util.List;
+
 public interface EventService {
     void createEvent(Long clubId, EventDto eventDto);
+
+    List<EventDto> findAllEvents();
 }

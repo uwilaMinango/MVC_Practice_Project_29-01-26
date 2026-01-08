@@ -9,7 +9,11 @@ import com.runner.web.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.runner.web.mapper.EventMapper.mapToEvent;
+import static com.runner.web.mapper.EventMapper.mapToEventDto;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -27,5 +31,13 @@ public class EventServiceImpl implements EventService {
         Event event = mapToEvent(eventDto);
         event.setClub(club);
         eventRepo.save(event);
+    }
+
+    @Override
+    public List<EventDto> findAllEvents() {
+        List<Event> events = eventRepo.findAll();
+        return events.stream()
+                .map(event -> mapToEventDto(event))
+                .collect(Collectors.toList());
     }
 }
