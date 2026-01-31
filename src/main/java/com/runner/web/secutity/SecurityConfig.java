@@ -24,12 +24,12 @@ public class SecurityConfig {
 
     private JwtAuthEntryPoint authEntryPoint;
 
-    private CustomUserDetailsService customUserDetailsService;
+    /*private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
-    }
+    }*/
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
@@ -47,7 +47,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+   /* @Bean
     public UserDetailsService users(){
         UserDetails admin = User.builder()
                 .username("admin")
@@ -62,7 +62,7 @@ public class SecurityConfig {
                 .build();
 
         return new InMemoryUserDetailsManager(admin,user);
-    }
+    }*/
 
     @Bean
     public AuthenticationManager authenticationManager
