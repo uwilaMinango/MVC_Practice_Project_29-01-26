@@ -1,15 +1,22 @@
 package com.runner.web.controller;
 
+import com.runner.web.dto.AuthResponseDto;
+import com.runner.web.dto.LoginDto;
 import com.runner.web.dto.RegisterDto;
 import com.runner.web.models.Roles;
 import com.runner.web.models.UserEntity;
 import com.runner.web.repo.RoleRepo;
 import com.runner.web.repo.UserRepo;
+import com.runner.web.secutity.JwtGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,17 +30,34 @@ import java.util.Collections;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+
     private UserRepo userRepo;
     private AuthenticationManager authenticationManager;
     private RoleRepo roleRepo;
     private PasswordEncoder passwordEncoder;
+    private JwtGenerator jwtGenerator;
 
     @Autowired
-    public AuthController (UserRepo userRepo, AuthenticationManager authenticationManager, RoleRepo roleRepo, PasswordEncoder passwordEncoder) {
+    public AuthController (UserRepo userRepo,
+                           AuthenticationManager authenticationManager,
+                           RoleRepo roleRepo,
+                           PasswordEncoder passwordEncoder,
+                           JwtGenerator jwtGenerator) {
         this.userRepo = userRepo;
         this.authenticationManager = authenticationManager;
         this.roleRepo = roleRepo;
         this.passwordEncoder = passwordEncoder;
+        this.jwtGenerator = jwtGenerator;
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<AuthResponseDto>login(@RequestBody LoginDto loginDto){
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtGenerator.generateToken(authentication);
+        return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
     }
 
     @PostMapping("register")
@@ -41,6 +65,7 @@ public class AuthController {
         if(userRepo.existsByUsername(registerDto.getUsername())){
             return new ResponseEntity<>("User is taken", HttpStatus.BAD_REQUEST);
         }
+
 
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(registerDto.getUsername());
